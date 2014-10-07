@@ -964,6 +964,46 @@ func (t *RedisTest) TestStringsBitOpNot(c *C) {
 	c.Assert(get.Val(), Equals, "\xff")
 }
 
+func (t *RedisTest) TestStringsBitPos(c *C) {
+	c.Assert(t.client.Set("mykey", "\xff\xf0\x00").Err(), IsNil)
+
+	pos, err := t.client.BitPos("mykey", 0).Result()
+	c.Assert(err, IsNil)
+	c.Assert(pos, Equals, int64(12))
+
+	pos, err = t.client.BitPos("mykey", 1).Result()
+	c.Assert(err, IsNil)
+	c.Assert(pos, Equals, int64(0))
+
+	pos, err = t.client.BitPos("mykey", 0, 2).Result()
+	c.Assert(err, IsNil)
+	c.Assert(pos, Equals, int64(16))
+
+	pos, err = t.client.BitPos("mykey", 1, 2).Result()
+	c.Assert(err, IsNil)
+	c.Assert(pos, Equals, int64(-1))
+
+	pos, err = t.client.BitPos("mykey", 0, -1).Result()
+	c.Assert(err, IsNil)
+	c.Assert(pos, Equals, int64(16))
+
+	pos, err = t.client.BitPos("mykey", 1, -1).Result()
+	c.Assert(err, IsNil)
+	c.Assert(pos, Equals, int64(-1))
+
+	pos, err = t.client.BitPos("mykey", 0, 2, 1).Result()
+	c.Assert(err, IsNil)
+	c.Assert(pos, Equals, int64(-1))
+
+	pos, err = t.client.BitPos("mykey", 0, 0, -3).Result()
+	c.Assert(err, IsNil)
+	c.Assert(pos, Equals, int64(-1))
+
+	pos, err = t.client.BitPos("mykey", 0, 0, 0).Result()
+	c.Assert(err, IsNil)
+	c.Assert(pos, Equals, int64(-1))
+}
+
 func (t *RedisTest) TestStringsDecr(c *C) {
 	set := t.client.Set("key", "10")
 	c.Assert(set.Err(), IsNil)
