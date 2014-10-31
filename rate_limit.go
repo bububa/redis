@@ -40,6 +40,7 @@ func (rl *rateLimiter) Check() bool {
 		}
 		return false
 	}
+	return false
 }
 
 func (rl *rateLimiter) Close() error {

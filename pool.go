@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"gopkg.in/bufio.v1"
+	"github.com/bububa/bufio"
 )
 
 var (

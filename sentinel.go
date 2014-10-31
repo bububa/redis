@@ -134,8 +134,11 @@ func (d *sentinelFailover) dial() (net.Conn, error) {
 }
 
 func (d *sentinelFailover) Pool() pool {
+	dialer := func() (net.Conn, error) {
+		return d.dial()
+	}
 	d.poolOnce.Do(func() {
-		d.pool = newConnPool(newConnFunc(d.dial), d.opt)
+		d.pool = newConnPool(newConnFunc(dialer), d.opt)
 	})
 	return d.pool
 }
